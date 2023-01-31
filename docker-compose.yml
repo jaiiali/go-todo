@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+
+  # app:
+  #   container_name: todo-app
+  #   build:
+  #     context: .
+  #     dockerfile: docker/Dockerfile
+  #     target: app
+  #   environment:
+  #     - DB_HOST=postgres
+  #     - HTTP_PORT=8000
+  #   ports:
+  #     - 8000:8000
+  #   networks:
+  #     - backend
+  #   depends_on:
+  #     - postgres
+
+  postgres:
+    container_name: todo-postgres
+    image: postgres:14-alpine
+    environment:
+      DATABASE_HOST: "${DB_HOST}"
+      POSTGRES_DB: "${DB_DATABASE}"
+      POSTGRES_USER: "${DB_USERNAME}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+    ports:
+      - 5432:5432
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

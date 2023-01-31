@@ -1,0 +1,67 @@
+stages:
+  - test
+  - qualify
+  - build
+  - deploy
+
+test:
+  stage: test
+  image: golang:alpine
+
+  script:
+    - make test
+
+coverage:
+  stage: test
+  image: golang:alpine
+
+  script:
+    - make mod
+    - make coverage
+
+  coverage: '/total:\s+\(statements\)\s+(\d+.\d+\%)/'
+
+lint:
+  stage: qualify
+  image: golangci/golangci-lint
+
+  script:
+    - make mod
+    - make lint
+
+build:
+  stage: build
+  image: golang:alpine
+
+  tags:
+    - docker
+
+  script:
+    - make mod
+    - make build
+
+  artifacts:
+    paths:
+      - bin
+
+docker_build:
+  stage: deploy
+  image: docker
+
+  rules:
+    - if: $CI_COMMIT_TAG
+
+  variables:
+    DOCKERFILE: docker/Dockerfile
+    VERSION: $CI_COMMIT_TAG
+    LATEST: latest
+
+  before_script:
+    - echo -n $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+
+  script:
+    - docker build . --force-rm --compress --file $DOCKERFILE --target app --tag $CI_REGISTRY_IMAGE:$VERSION
+    - docker push $CI_REGISTRY_IMAGE:$VERSION
+
+    - docker tag $CI_REGISTRY_IMAGE:$VERSION $CI_REGISTRY_IMAGE:$LATEST
+    - docker push $CI_REGISTRY_IMAGE:$LATEST

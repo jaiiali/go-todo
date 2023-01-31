@@ -1,0 +1,60 @@
+run:
+  tests: false
+
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+
+linters-settings:
+
+linters:
+  disable-all: true
+  enable:
+    - asciicheck
+    - depguard
+    - dogsled
+    - durationcheck
+    - errcheck
+    - errorlint
+    - exhaustive
+    - exportloopref
+    - forbidigo
+    - forcetypeassert
+    - funlen
+    - gochecknoinits
+    - goconst
+    - godot
+    - gofmt
+    - goheader
+    - goimports
+    - gomnd
+    - gomodguard
+    - goprintffuncname
+    - gosimple
+    - govet
+    - importas
+    - ineffassign
+    - lll
+    - makezero
+    - misspell
+    - nakedret
+    - nestif
+    - paralleltest
+    - prealloc
+    - predeclared
+    - promlinter
+    - revive
+    - staticcheck
+    - stylecheck
+    - testpackage
+    - thelper
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+
+issues:
+
+severity:
